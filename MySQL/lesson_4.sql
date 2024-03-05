@@ -122,6 +122,6 @@ SELECT * FROM country;
 SELECT name, population, surfacearea, (population/surfacearea) AS RATIO,
 IF((population/surfacearea) > 30, 'SUPER-POBLADO', IF((population/surfacearea) >= 20, 'POBLADO', IF((population/surfacearea) >= 10, 'POCO POBLADO','DESHABITADO'))) AS ESTADO
 FROM country
-WHERE region LIKE '%America' ORDER BY RATIO DESC;
+WHERE region LIKE '%America', ORDER BY RATIO DESC;
 
 
