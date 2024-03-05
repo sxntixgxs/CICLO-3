@@ -124,4 +124,7 @@ ORDER BY Num_A DESC;
 X. Muestre un listado de todos los países con un solo nombre que terminan en “bia”.
 Ordene este listado alfabéticamente por el nombre del pais. */
 
-SELECT IF(), 
+SELECT name 
+FROM country 
+WHERE name LIKE "%bia"
+ORDER BY name;
