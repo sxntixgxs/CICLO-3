@@ -1,0 +1,127 @@
+-- 9. REPLACE
+/*      REEMPLAZA UNA SUBCADENA POR OTRA
+    EJEMPLO: 
+        SELECT REPLACE('Hola Mundo', 'Mundo', 'Amigo'); Devuelve 'Hola Amigo'.
+*/
+
+-- EJERCICIO: Mostrar el listado de los paises en los cuales es posible hacer el reemplazo.
+
+USE world;
+SELECT name, REPLACE(name, "Gu", "YU") AS REMPLAZO
+FROM country 
+WHERE region = "SOUTH AMERICA" AND name <> REPLACE(name, "Gu", "YU");
+
+
+-- 10. CHAR_LENGTH: 
+/* DEVUELVE LA LONGITUD DE UNA CADENA EN CARACTERES, NO EN BYTES
+SI SE USA UTF-8 POR EJEMPLO, ES MEJOR USAR CHAR_LENGTH QUE LENGTH
+*/
+
+-- 11. CONVERT:
+/* CONVIERTE UNA CADENA DE UN CONJUNTO DE CARACTERES A OTO
+EJ: SELECT CONVERT('Hola', BINARY); CONVIERTE LA CADENA A UN TIPO BINARIO.
+SELECT CONVERT('2022-08-09', DATE); CONVIERTE LA CADENA A UN TIPO DATE
+
+-- LOCATE: 
+/* DEVUELVE LA POSICION DE LA PRIMERA OCURRENCIA DE UNA SUBCADENA EN UNA CADENA;
+EJEMPLO: SELECT LOCATE('la', 'Hola'); devuelve 3.
+*/
+
+-- CONV:
+/* CONVIERTE UN NUMERO DE UN SISTEMA NUMERICO A OTRO.
+SELECT CONV('1101',2,10); CONVIERTE EL NUMERO BINARIO 1101 A DECIMAL.
+
+-- FORMAT
+/* FORMATEA UN NUMERO CON LA CANTIDAD DE DECIMALES Y EL FORMATO DE MILES ESPECIFICADO.
+ SELECT FORMAT(1234567.89 ,2); DEVUELVE 1,234,567.89*/
+
+ -- REPEAT
+ /* REPITE UNA CADENA UN NUMERO ESPECIFICO DE VECES
+ SELECT REPEAT('Hola',3); DEVUELVE 'Hola Hola Hola'-*/
+
+ -- INSERT 
+ /* INSERTA UNA SUBCADENA EN UNA POSICION ESPECIFICA DENTRO DE UNA CADENA
+ SELECT INSERT('Holaa Mundo', 5, 1, 'mi ') devuelve 'Hola mi Mundo' . el 1 hace referencia al numero de caracteres que va a reemplazar/*
+
+-- MID
+/* RETORNA UNA SUBCADENA DE UNA CADENA
+    EJ: SLEECT MID('Hola Mundo', 1, 4); devuelve 'Hola'; ES MUCHO MAS USADO SUBSTR
+*/
+
+-- LPAD 
+/* RELLENA UNA CADENA A LA IZQUIERDA CON UN CARACTER ESPECIFICO HASTA ALCANZAR UNA LONGITUD DESDEADA.
+EJEM SELECT LPAD('MySQL', 10, '*'); DEVUELVE '*****MySQL'*/
+
+-- COUNT
+/* UTILIZADA PARA CONTAR EL NUMERO DE FILAS QUE CUMPLEN CON UNA CONDICION ESPECIFICA EN UNA CONSULTA
+SELECT COUNT(*) FROM tabla;
+*/
+
+-- SUM
+/* SE USA PARA CALCULAR LA SUMA DE LOS VALORES EN UNA COLUMNA
+SELECT SUM(columna) FROM tabla;
+EJ SELECT FORMAT(SUM(population), 0) AS Total_Poblacion FROM country;
+
+-- AVG
+/* CALCULA EL VALOR PROMEDIO DE UNA COLUMNA NUMERICA
+SELECT AVG(columna) FROM tabla;
+SELECT AVG(population) AS promedio_hab_pais FROM country;
+*/
+
+-- MAX
+/* DEVUELVE EL VALOR MAXIMO DE UNA COLUMNA
+SELECT MAX(columna) FROM tabla;
+
+-- MIN
+/* DEVUELVE EL VALOR MINIMO DE UNA COLUMNA
+SELECT MIN(columna) FROM tabla;
+
+-- DATE_FORMAT
+FORMATEA UNA FECHA CON EL FORMATO ESPECIFICADO
+SELECT DATE_FORMAT(fecha, '%Y-%m-%d') FROM tabla
+
+-- NOW
+devuelve fecha y hora actuales
+SELECT NOW();
+EJ:
+    SELECT DATE_FORMAT(NOW(),'%d/%m/%Y') AS fecha_col;
+
+-- ROUND()
+REDONDEA UN NUMERO A UNA CANTIDAD DE DECIMALES
+SELECT ROUND(precio,2) AS precio_redondeado FROM productos;
+
+-- IFNULL()
+USO IFNULL(campo,valor_alternativo) DEVUELVE UN VALOR ALTERNATIVO SI EL CAMPO ES NULO.
+DEVUELVE UN VALOR ALTERNATIVO SI ES NULO
+SELECT IFNULL(nombre,'N/A') AS nombre_alternativo FROM usuarios;
+
+================================================================
+
+IF EN CAMPOS
+
+SINTAXIS: IF(condicion, valor_si_verdadero, valor_si_falso)
+
+EJEMPLO DE USO:
+-1. asignacion condicionada de valores
+    Asignar categorias a productos basándose en su precio.
+
+    SELECT nombre, precio IF(precio > 100, 'Premium', 'Estandar') AS 'Categoria' FROM productos;
+*/USE world;
+    SELECT name,population, 
+    IF(population > 40000000, 'Sobrepoblacion', IF(population > 20000000, 'Poblado', 'Despoblado')) AS ESTADO FROM country WHERE region = "South America";
+
+/* EJERCICIO: 
+CALCULAR LA DENSIDAD DE POBLACION DE LOS PAISES DE AMERICA
+SI LA DENSIDAD DE POBLACION ES MAYOR AL 30h/km2 ENTONCES MOSTRAR QUE ESTÁ SUPER-POBLADO
+SI ESTÁ ENTRE [20-30]h/km2 MOSTRAR QUE ESTÁ POBLADO
+SI ESTA ENTRE [10,20]h/km2 QUE ESTÁ POCO POBLADO Y SI ES MENOR A 10% ESTÁ DESHABITADO.
+
+*/ 
+
+SELECT * FROM country;
+SELECT name, population, surfacearea, (population/surfacearea) AS RATIO,
+IF((population/surfacearea) > 30, 'SUPER-POBLADO', IF((population/surfacearea) >= 20, 'POBLADO', IF((population/surfacearea) >= 10, 'POCO POBLADO','DESHABITADO'))) AS ESTADO
+FROM country
+WHERE region LIKE '%America' ORDER BY RATIO DESC;
+
+
