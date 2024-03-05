@@ -63,23 +63,65 @@ independizados”. Es recién independizado si su fecha de independizado es
 posterior a 1899.
 */
 
-SELECT name, IF(IndepYear > 1899, 'Recién independizado', IF(IndepYear < 1899, 'Antiguamente independizado', 'N/A'))
+SELECT name AS Nombre, IF(IndepYear > 1899, 'Recién independizado', IF(IndepYear < 1899, 'Antiguamente independizado', 'N/A')) AS INDEPENDENCIA
  FROM country
- WHERE IndepYear <> NULL;
+ WHERE IndepYear <> 'NULL';
 
 /*
 IV. Cual es el promedio de nivel d vida de los países africanos.
+
+*/
+
+SELECT * FROM country;
+SELECT name AS País, LifeExpectancy AS Expectativa_de_vida FROM country WHERE Continent = 'Africa';
+
+/*
+
 V. Cuál es el país con menor nivel de vida.
+
+*/
+SELECT name AS País, LifeExpectancy AS Expectativa_de_vida FROM country WHERE LifeExpectancy <> 'NULL' ORDER BY LifeExpectancy ;
+
+/*
 VI. Cuál es el país con mayor nivel de vida.
+*/
+
+SELECT name AS País, LifeExpectancy AS Expectativa_de_vida FROM country WHERE LifeExpectancy <> 'NULL' ORDER BY LifeExpectancy DESC;
+
+/*
+
 VII. Muestre un listado de los países de América y cuanta es la capacidad de repartir su
 riqueza entre su densidad de población. GNP = PIB. El listado debe estar ordenado
 descendentemente por capacidad de repartir riqueza, luego por nombre
 ascendentemente. La capacidad de repartir riqueza debe mostrarse en separación
 de miles y con dos decimales.
+*/
+
+SELECT name AS País, FORMAT(GNP,2) AS PIB FROM country WHERE Continent LIKE '%America' ORDER BY GNP DESC, name;
+
+
+/*
 VIII. Muestre los segundos nombres de los países de Europa. El listado debe estar
 ordenado alfabéticamente por este segundo nombre
+*/
+
+SELECT LocalName AS Nombre FROM country  WHERE `Continent`="Europe" ORDER BY `LocalName`;
+
+/*
+
 IX. Muestre un listado de los países America y la cantidad de veces que aparece la
 letra “A” en ellos. El listado debe estar ordenado por la cantidad de veces que
 aparece la letra A en el nombre del país.
+*/
+
+SELECT name,
+LENGTH(name) - LENGTH(REPLACE(UPPER(name),'A','')) AS Num_A
+FROM country 
+WHERE Continent LIKE '%America' 
+ORDER BY Num_A DESC;
+
+/*
 X. Muestre un listado de todos los países con un solo nombre que terminan en “bia”.
 Ordene este listado alfabéticamente por el nombre del pais. */
+
+SELECT IF(), 

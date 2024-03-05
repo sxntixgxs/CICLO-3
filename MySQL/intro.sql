@@ -1,5 +1,10 @@
 CREATE DATABASE mundo;
 
+/* 
+para ejecutar el script de una base de datos, es decir crearla ? el comando es 
+mysql -h localhost - santiago -p wolrd ./world.sql
+*/
+
 USE mundo;
 
 CREATE TABLE IF NOT EXISTS pais(
