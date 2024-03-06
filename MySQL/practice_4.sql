@@ -26,7 +26,7 @@ Seleccione el ID, el nombre, la raza y la coloración de todos los gatos que son
 hembras, que adicionalmente les gusten los juguetes provocadores y que vo sean de
 raza persa o siamesa.
 */
-SELECT id, name, breed, coloration, sex, fav_toy FROM cat WHERE sex = "F" AND fav_toy = "provocador" AND breed <> "PERSA" OR breed <> "SIAMES";
+SELECT id, name, breed, coloration, sex, fav_toy FROM cat WHERE (sex = "F" AND fav_toy = "provocador") AND (breed <> "PERSA" OR breed <> "SIAMES");
 
 /* 2. Con la base de datos World hacer las consultas propuestas:
 
@@ -34,7 +34,7 @@ Cual es el idioma con el nombre más largo hablado en el mundo. También indique
 que países hablan ese idioma. El listado debe estar ordenado alfabéticamente por
 nombre de país.*/
 
-USE world;
+USE world;/*ESTO ESTA MAL, CORREGIR*/
 SELECT * FROM countrylanguage;
 SELECT * FROM country;
 
@@ -48,7 +48,7 @@ ORDER BY largo DESC, C.name;
 /*
 
 II. Muestre un listado del año de independencia de cada país. Si aún no se ha
-independizado muestre el vano “N/A”
+independizado muestre el AÑO “N/A”
 
 */
 
@@ -73,20 +73,20 @@ IV. Cual es el promedio de nivel d vida de los países africanos.
 */
 
 SELECT * FROM country;
-SELECT name AS País, LifeExpectancy AS Expectativa_de_vida FROM country WHERE Continent = 'Africa';
+SELECT AVG(LifeExpectancy) AS Average FROM country WHERE Continent = 'Africa';
 
 /*
 
 V. Cuál es el país con menor nivel de vida.
 
 */
-SELECT name AS País, LifeExpectancy AS Expectativa_de_vida FROM country WHERE LifeExpectancy <> 'NULL' ORDER BY LifeExpectancy ;
-
+SELECT name AS País, LifeExpectancy AS Expectativa_de_vida FROM country WHERE LifeExpectancy <> 'NULL' ORDER BY LifeExpectancy LIMIT 1;
+-- SELECT name AS País,MIN(LifeExpectancy) AS LifeExpectancy FROM country;
 /*
 VI. Cuál es el país con mayor nivel de vida.
 */
 
-SELECT name AS País, LifeExpectancy AS Expectativa_de_vida FROM country WHERE LifeExpectancy <> 'NULL' ORDER BY LifeExpectancy DESC;
+SELECT name AS País, LifeExpectancy AS Expectativa_de_vida FROM country WHERE LifeExpectancy <> 'NULL' ORDER BY LifeExpectancy DESC LIMIT 1;
 
 /*
 
@@ -96,17 +96,34 @@ descendentemente por capacidad de repartir riqueza, luego por nombre
 ascendentemente. La capacidad de repartir riqueza debe mostrarse en separación
 de miles y con dos decimales.
 */
+/*ESTA RESPUESTA ESTA BIEN, PERO EL PLANTEAMIENTO DE LA PREGUNTA DEBIA SER PIB / DENSIDAD POBLACIONAL
+SELECT name AS País, FORMAT(GNP,2) AS PIB 
+FROM country 
+WHERE Continent LIKE '%America' 
+ORDER BY GNP DESC, name;
+*/
+SELECT * FROM country;
+/* esta si esta bien planteada pq la capacidad de repartir riqueza es gnp / dp */
 
-SELECT name AS País, FORMAT(GNP,2) AS PIB FROM country WHERE Continent LIKE '%America' ORDER BY GNP DESC, name;
+-- SELECT name AS País, CAST(FORMAT(((GNP)/(population/surfacearea)),2)AS ) AS CAPACIDAD_RIQUEZA /*NOTA, FORMAT DEVUELVE UNA CADENA, SE DEBE CONVERTIR SI SE QUIERE ORD*/
+-- FROM country
+-- WHERE Continent LIKE '%America' 
+-- ORDER BY CAPACIDAD_RIQUEZA DESC, name;
 
+
+SELECT name AS País, ROUND(((GNP)/(population/surfacearea)),2) AS CAPACIDAD_RIQUEZA
+FROM country
+WHERE Continent LIKE '%America' 
+ORDER BY CAPACIDAD_RIQUEZA DESC, name;
 
 /*
 VIII. Muestre los segundos nombres de los países de Europa. El listado debe estar
 ordenado alfabéticamente por este segundo nombre
 */
 
-SELECT LocalName AS Nombre FROM country  WHERE `Continent`="Europe" ORDER BY `LocalName`;
-
+SELECT LocalName AS Nombre FROM country  WHERE `Continent`="Europe" ORDER BY `LocalName`;/*XD NO SE REFERIA A ESTO, SINO AL SEGUNDO NOMBRE, ES DECIR, DESPUES DEL ESPACIO*/
+-- LOCATE("caracter",cadena,[posicionInicial])
+-- SUBSTR(nombrecadena,quesesaca)
 /*
 
 IX. Muestre un listado de los países America y la cantidad de veces que aparece la
