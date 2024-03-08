@@ -284,7 +284,7 @@ JOIN fabricante AS F ON P.id_fabricante = F.id;
 productos de la base de datos. Ordene el resultado por el nombre del fabricante, por orden
 alfabético.*/
 
-SELECT P.nombre, P.precio, F.nombre AS Nombre_fabricante
+SELECT P.nombre AS Nombre_Producto, P.precio AS Precio_Producto, F.nombre AS Nombre_fabricante
 FROM producto AS P
 RIGHT JOIN fabricante AS F ON P.id_fabricante = F.id
 ORDER BY F.nombre; 
@@ -293,7 +293,7 @@ ORDER BY F.nombre;
 3. Devuelve una lista con el identificador del producto, nombre del producto, identificador del
 fabricante y nombre del fabricante, de todos los productos de la base de datos.*/
 
-SELECT P.id AS codigo_producto,P.nombre, P.precio, F.id AS id_fabricante , F.nombre AS Nombre_fabricante
+SELECT P.id AS ID_Producto,P.nombre AS Nombre_Producto,F.id AS ID_Fabricante , F.nombre AS Nombre_fabricante
 FROM producto AS P
 JOIN fabricante AS F ON P.id_fabricante = F.id; 
 /*
@@ -301,7 +301,7 @@ JOIN fabricante AS F ON P.id_fabricante = F.id;
 barato.*/
 
 
-    SELECT P.nombre, P.precio, F.nombre AS nombre_fabricante
+    SELECT P.nombre AS Nombre_Producto, P.precio AS Precio_Producto, F.nombre AS Nombre_Fabricante
     FROM producto AS P
     JOIN fabricante AS F ON P.id_fabricante = F.id
     WHERE P.precio = (
@@ -313,7 +313,7 @@ barato.*/
 5. Devuelve el nombre del producto, su precio y el nombre de su fabricante, del producto más
 caro.*/
 
-    SELECT P.nombre, P.precio, F.nombre AS nombre_fabricante
+SELECT P.nombre AS Nombre_Producto, P.precio AS Precio_Producto, F.nombre AS Nombre_Fabricante
     FROM producto AS P
     JOIN fabricante AS F ON P.id_fabricante = F.id
     WHERE P.precio = (
@@ -324,7 +324,7 @@ caro.*/
 /*
 6. Devuelve una lista de todos los productos del fabricante Lenovo.*/
 
-SELECT P.nombre AS Product, F.nombre AS Fabricante
+SELECT P.nombre AS Lenovo_Products
 FROM producto AS P
 JOIN fabricante AS F ON P.id_fabricante = F.id
 WHERE F.nombre = "Lenovo";
@@ -333,7 +333,7 @@ WHERE F.nombre = "Lenovo";
 7. Devuelve una lista de todos los productos del fabricante Crucial que tengan un precio mayor
 que 200€.*/
 
-SELECT P.nombre AS Product, F.nombre AS Fabricante
+SELECT P.nombre AS Product, F.nombre AS Fabricante, P.precio AS Price
 FROM producto AS P
 JOIN fabricante AS F ON P.id_fabricante = F.id
 WHERE F.nombre = "Crucial" AND P.precio > 200;
@@ -341,20 +341,81 @@ WHERE F.nombre = "Crucial" AND P.precio > 200;
 /*
 8. Devuelve un listado con todos los productos de los fabricantes Asus, Hewlett-Packardy
 Seagate. Sin utilizar el operador IN.
+*/
+
+SELECT * FROM fabricante;
+SELECT * FROM producto;
+
+SELECT P.nombre AS Nombre_Producto, F.nombre AS Fabricante
+FROM producto AS P
+JOIN fabricante AS F ON P.id_fabricante = F.id
+WHERE F.nombre = "Asus" OR F.nombre = "Hewlett-Packard" OR F.nombre = "Seagate";
+
+
+/*
 9. Devuelve un listado con todos los productos de los fabricantes Asus, Hewlett-Packardy
-Seagate. Utilizando el operador IN.
+Seagate. Utilizando el operador IN.*/
+
+
+SELECT P.nombre AS Nombre_Producto, F.nombre AS Fabricante
+FROM producto AS P
+JOIN fabricante AS F ON P.id_fabricante = F.id
+WHERE F.nombre IN ("Asus", "Hewlett-Packard", "Seagate");
+
+
+/*
 10. Devuelve un listado con el nombre y el precio de todos los productos de los fabricantes cuyo
-nombre termine por la vocal e.
+nombre termine por la vocal e.*/
+
+SELECT * FROM producto;
+SELECT * FROM fabricante;
+SELECT P.nombre, P.precio, F.nombre
+FROM producto AS P
+JOIN fabricante AS F ON P.id_fabricante = F.id
+WHERE F.nombre LIKE "%e";
+
+/*
 11. Devuelve un listado con el nombre y el precio de todos los productos cuyo nombre de
-fabricante contenga el carácter w en su nombre.
+fabricante contenga el carácter w en su nombre.*/
+
+SELECT P.nombre, P.precio, F.nombre
+FROM producto AS P
+JOIN fabricante AS F ON P.id_fabricante = F.id
+WHERE F.nombre LIKE "%w%";
+
+/*
 12. Devuelve un listado con el nombre de producto, precio y nombre de fabricante, de todos los
 productos que tengan un precio mayor o igual a 180€. Ordene el resultado en primer lugar
-por el precio (en orden descendente) y en segundo lugar por el nombre (en orden ascendente)
+por el precio (en orden descendente) y en segundo lugar por el nombre (en orden ascendente)*/
+
+SELECT P.nombre AS Producto, P.precio AS Precio, F.nombre AS Fabricante
+FROM producto AS P
+JOIN fabricante AS F ON P.id_fabricante = F.id
+WHERE P.precio >= 180
+ORDER BY Precio DESC, Producto;
+
+
+/*
 13. Devuelve un listado con el identificador y el nombre de fabricante, solamente de aquellos
-fabricantes que tienen productos asociados en la base de datos.
+fabricantes que tienen productos asociados en la base de datos.*/
+
+SELECT * FROM fabricante;
+SELECT * FROM producto;
+SELECT DISTINCT F.id AS Identificador, F.nombre AS Nombre
+FROM fabricante AS F
+INNER JOIN producto AS P ON F.id = P.id_fabricante;
+
+/*
 14. Devuelve un listado de todos los fabricantes que existen en la base de datos, junto con los
 productos que tiene cada uno de ellos. El listado deberá mostrar también aquellos fabricantes
-que no tienen productos asociados.
+que no tienen productos asociados.*/
+
+SELECT F.nombre AS Fabricante, IFNULL(P.nombre, "Sin Registros") AS Producto
+FROM fabricante AS F
+LEFT JOIN producto AS P ON F.id = P.id_fabricante;
+
+
+/*
 15. Devuelve un listado donde sólo aparezcan aquellos fabricantes que no tienen ningún
 producto asociado.
 16. ¿Pueden existir productos que no estén relacionados con un fabricante? Justifique su
