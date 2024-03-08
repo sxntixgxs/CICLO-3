@@ -192,9 +192,9 @@ SELECT * FROM city;
 SELECT * FROM country;
 SELECT * FROM countrylanguage;
 
-SELECT CL.language AS Lenguajes_Santander
+SELECT DISTINCT CL.language AS Lenguajes_Santander
 FROM countrylanguage AS CL
-RIGHT JOIN city AS CT ON CL.countrycode = CT.countrycode
+JOIN city AS CT ON CL.countrycode = CT.countrycode
 WHERE CL.isofficial = "F" AND CT.district = "Santander" 
 ORDER BY Lenguajes_Santander;
 
@@ -203,12 +203,20 @@ ORDER BY Lenguajes_Santander;
 • Encontrar los países que no tienen idioma oficial registrado.
 */
 
-    SELECT C.name
+    SELECT DISTINCT C.name
     FROM country AS C
     RIGHT JOIN countrylanguage AS CL ON C.code = CL.countrycode
     WHERE CL.isofficial <> "T";
+/*ESTA MAL!*/
 
-
+    SELECT DISTINCT C.name 
+    FROM country AS C
+    LEFT JOIN countrylanguage AS CL ON C.code = CL.countrycode
+    WHERE CL.countrycode NOT IN (
+        SELECT DISTINCT CL2.countrycode
+        FROM countrylanguage AS CL2
+        WHERE C.code = CL2.countrycode AND isofficial = "T"
+    );
 /*
 7. Ciudades habla hispanas de Asia:
 • Mostrar la ciudades de Asia y su país, ordenadas por la cantidad de habitantes, que
@@ -261,10 +269,13 @@ INSERT INTO producto VALUES(11, 'Impresora HP Laserjet Pro M26nw', 180, 3);
 Devuelve una lista con el nombre del producto, precio y nombre de fabricante de todos los
 productos de la base de datos.
 */
+SELECT * FROM producto;
+SELECT * FROM fabricante;
 
-SELECT P.nombre, P.precio, F.nombre
-FROM producto AS P, fabricante AS F
-RIGHT JOIN fabricante AS F ON P.id_fabricante = F.id; 
+
+SELECT P.nombre, P.precio, F.nombre AS nombre_fabricante
+FROM producto AS P
+JOIN fabricante AS F ON P.id_fabricante = F.id; 
 
 -- ??????? 
 
@@ -273,8 +284,8 @@ RIGHT JOIN fabricante AS F ON P.id_fabricante = F.id;
 productos de la base de datos. Ordene el resultado por el nombre del fabricante, por orden
 alfabético.*/
 
-SELECT P.nombre, P.precio, F.nombre
-FROM producto AS P, fabricante AS F
+SELECT P.nombre, P.precio, F.nombre AS Nombre_fabricante
+FROM producto AS P
 RIGHT JOIN fabricante AS F ON P.id_fabricante = F.id
 ORDER BY F.nombre; 
 
@@ -282,18 +293,52 @@ ORDER BY F.nombre;
 3. Devuelve una lista con el identificador del producto, nombre del producto, identificador del
 fabricante y nombre del fabricante, de todos los productos de la base de datos.*/
 
-SELECT P.*, F.nombre
+SELECT P.id AS codigo_producto,P.nombre, P.precio, F.id AS id_fabricante , F.nombre AS Nombre_fabricante
 FROM producto AS P
-RIGHT JOIN fabricante AS F ON P.id_fabricante = F.
-
+JOIN fabricante AS F ON P.id_fabricante = F.id; 
 /*
 4. Devuelve el nombre del producto, su precio y el nombre de su fabricante, del producto más
-barato.
+barato.*/
+
+
+    SELECT P.nombre, P.precio, F.nombre AS nombre_fabricante
+    FROM producto AS P
+    JOIN fabricante AS F ON P.id_fabricante = F.id
+    WHERE P.precio = (
+        SELECT MIN(P.precio)
+        FROM producto AS P
+    );
+
+/*
 5. Devuelve el nombre del producto, su precio y el nombre de su fabricante, del producto más
-caro.
-6. Devuelve una lista de todos los productos del fabricante Lenovo.
+caro.*/
+
+    SELECT P.nombre, P.precio, F.nombre AS nombre_fabricante
+    FROM producto AS P
+    JOIN fabricante AS F ON P.id_fabricante = F.id
+    WHERE P.precio = (
+        SELECT MAX(P.precio)
+        FROM producto AS P
+    );
+
+/*
+6. Devuelve una lista de todos los productos del fabricante Lenovo.*/
+
+SELECT P.nombre AS Product, F.nombre AS Fabricante
+FROM producto AS P
+JOIN fabricante AS F ON P.id_fabricante = F.id
+WHERE F.nombre = "Lenovo";
+
+/*
 7. Devuelve una lista de todos los productos del fabricante Crucial que tengan un precio mayor
-que 200€.
+que 200€.*/
+
+SELECT P.nombre AS Product, F.nombre AS Fabricante
+FROM producto AS P
+JOIN fabricante AS F ON P.id_fabricante = F.id
+WHERE F.nombre = "Crucial" AND P.precio > 200;
+
+/*
 8. Devuelve un listado con todos los productos de los fabricantes Asus, Hewlett-Packardy
 Seagate. Sin utilizar el operador IN.
 9. Devuelve un listado con todos los productos de los fabricantes Asus, Hewlett-Packardy
