@@ -409,7 +409,7 @@ INNER JOIN producto AS P ON F.id = P.id_fabricante;
 14. Devuelve un listado de todos los fabricantes que existen en la base de datos, junto con los
 productos que tiene cada uno de ellos. El listado deberá mostrar también aquellos fabricantes
 que no tienen productos asociados.*/
-
+USE tienda;
 SELECT F.nombre AS Fabricante, IFNULL(P.nombre, "Sin Registros") AS Producto
 FROM fabricante AS F
 LEFT JOIN producto AS P ON F.id = P.id_fabricante;
@@ -417,10 +417,28 @@ LEFT JOIN producto AS P ON F.id = P.id_fabricante;
 
 /*
 15. Devuelve un listado donde sólo aparezcan aquellos fabricantes que no tienen ningún
-producto asociado.
+producto asociado.*/
+SELECT * FROM fabricante;
+SELECT * FROM producto;
+
+SELECT F.nombre AS Fabricante
+FROM fabricante AS F
+LEFT JOIN producto AS P ON F.id = P.id_fabricante
+WHERE F.id NOT IN (
+    SELECT id_fabricante
+    FROM producto
+) ;
+
+/*
 16. ¿Pueden existir productos que no estén relacionados con un fabricante? Justifique su
 respuesta.
-17. Devuelve todos los productos del fabricante Lenovo. (Sin utilizar INNER JOIN).
+No, porque la tabla está diseñada para que esa relacion sea através de una llave foranea por lo que no puede ser null*/
+
+/*
+17. Devuelve todos los productos del fabricante Lenovo. (Sin utilizar INNER JOIN).*/
+
+SELECT 
+/*
 
 18. Devuelve todos los datos de los productos que tienen el mismo precio que el producto más
 caro del fabricante Lenovo. (Sin utilizar INNER JOIN).
