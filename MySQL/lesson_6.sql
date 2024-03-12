@@ -1,6 +1,7 @@
 CREATE SCHEMA prueba;
 USE prueba;
 
+
 -- CREACION DE LA TABLA VEHÍCULO
 
 CREATE TABLE vehiculo(
@@ -439,30 +440,99 @@ No, porque la tabla está diseñada para que esa relacion sea através de una ll
 USE tienda;
 SELECT * FROM producto;
 SELECT * FROM fabricante;
-SELECT DISTINCT P.nombre
+
+SELECT P.nombre
 FROM producto AS P
 WHERE P.id_fabricante IN (
     SELECT id
     FROM fabricante
-    WHERE nombre <> "Lenovo"
+    WHERE nombre = "Lenovo"
 );
 /*
 18. Devuelve todos los datos de los productos que tienen el mismo precio que el producto más
 caro del fabricante Lenovo. (Sin utilizar INNER JOIN).*/
+USE tienda;
+SELECT * FROM fabricante;
+SELECT * FROM producto;
 
-SELECT DISTINCT P.nombre
-FROM producto AS P
-WHERE P.id_fabricante IN (
-    SELECT id
-    FROM fabricante
-    WHERE nombre <> "Lenovo"
-);
+    
+    SELECT *
+    FROM producto
+    WHERE precio = (SELECT MAX(C1.precio) AS MayPr
+    FROM (
+        SELECT *
+        FROM producto AS P
+        WHERE P.id_fabricante IN (
+            SELECT id
+            FROM fabricante
+            WHERE nombre = "Lenovo"
+            )) AS C1);
+
 
 /*
-19. Lista el nombre del producto más caro del fabricante Lenovo.
-20. Lista el nombre del producto más barato del fabricante Hewlett-Packard.
+19. Lista el nombre del producto más caro del fabricante Lenovo.*/
+
+SELECT P.*
+FROM producto AS P
+WHERE P.precio = (SELECT MAX(C1.precio) AS MayPr
+    FROM (
+        SELECT *
+        FROM producto AS P
+        WHERE P.id_fabricante IN (
+            SELECT id
+            FROM fabricante
+            WHERE nombre = "Lenovo"
+            )) AS C1);
+/*
+20. Lista el nombre del producto más barato del fabricante Hewlett-Packard.*/
+
+SELECT P.*
+FROM producto AS P
+WHERE P.precio = (SELECT MIN(C1.precio) AS MayPr
+    FROM (
+        SELECT *
+        FROM producto AS P
+        WHERE P.id_fabricante IN (
+            SELECT id
+            FROM fabricante
+            WHERE nombre = "Hewlett-Packard"
+            )) AS C1);
+
+/*
 21. Devuelve todos los productos de la base de datos que tienen un precio mayor o igual al
-producto más caro del fabricante Lenovo.
+producto más caro del fabricante Lenovo.*/
+
+    SELECT *
+    FROM producto
+    WHERE precio >= (SELECT MAX(C1.precio) AS MayPr
+    FROM (
+        SELECT *
+        FROM producto AS P
+        WHERE P.id_fabricante IN (
+            SELECT id
+            FROM fabricante
+            WHERE nombre = "Lenovo"
+            )) AS C1);
+
+
+/*
 22. Lista todos los productos del fabricante Asus que tienen un precio superior al precio medio
 de todos sus productos.
 */
+
+    SELECT *
+    FROM producto
+    WHERE precio >= (SELECT AVG(C1.precio) AS MayPr
+    FROM (
+        SELECT *
+        FROM producto AS P
+        WHERE P.id_fabricante IN (
+            SELECT id
+            FROM fabricante
+            WHERE nombre = "Asus"
+            )) AS C1);
+        
+    SELECT P.*
+    FROM producto AS P
+    JOIN fabricante AS F ON P.id_fabricante = F.id
+    WHERE F.nombre = "Asus";
