@@ -436,12 +436,29 @@ No, porque la tabla está diseñada para que esa relacion sea através de una ll
 
 /*
 17. Devuelve todos los productos del fabricante Lenovo. (Sin utilizar INNER JOIN).*/
-
-SELECT 
+USE tienda;
+SELECT * FROM producto;
+SELECT * FROM fabricante;
+SELECT DISTINCT P.nombre
+FROM producto AS P
+WHERE P.id_fabricante IN (
+    SELECT id
+    FROM fabricante
+    WHERE nombre <> "Lenovo"
+);
 /*
-
 18. Devuelve todos los datos de los productos que tienen el mismo precio que el producto más
-caro del fabricante Lenovo. (Sin utilizar INNER JOIN).
+caro del fabricante Lenovo. (Sin utilizar INNER JOIN).*/
+
+SELECT DISTINCT P.nombre
+FROM producto AS P
+WHERE P.id_fabricante IN (
+    SELECT id
+    FROM fabricante
+    WHERE nombre <> "Lenovo"
+);
+
+/*
 19. Lista el nombre del producto más caro del fabricante Lenovo.
 20. Lista el nombre del producto más barato del fabricante Hewlett-Packard.
 21. Devuelve todos los productos de la base de datos que tienen un precio mayor o igual al
