@@ -34,11 +34,22 @@ INSERT INTO producto VALUES(9, 'Portátil Ideapd 320', 444, 2);
 INSERT INTO producto VALUES(10, 'Impresora HP Deskjet 3720', 59.99, 3);
 INSERT INTO producto VALUES(11, 'Impresora HP Laserjet Pro M26nw', 180, 3);
 -- estudiar GROUP BY y ORDER BY
-/*
-Devuelve un listado con los nombres de los fabricantes que tienen 2 o más productos.
-*/
-/*se usa join*/
+-- EJERCICIOS Consultas SQL
+-- Devuelve un listado con los nombres de los fabricantes que tienen 2 o más productos.
 
+-- se usa join
+
+SELECT * FROM fabricante;
+SELECT * FROM producto;
+
+SELECT F.nombre
+FROM fabricante AS F
+WHERE F.id IN (
+    SELECT P.id_fabricante
+    FROM producto AS P
+    GROUP BY id_fabricante
+    HAVING COUNT(P.nombre) >= 2
+);
 
 /*
 2. Devuelve un listado con los nombres de los fabricantes y el número de productos que
@@ -47,30 +58,35 @@ de los fabricantes que no tienen productos que cumplan la condición.
 */
 SELECT * FROM fabricante;
 SELECT * FROM producto;
-SELECT F.nombre,(
-    SELECT count(*) AS count 
-    FROM producto AS P
-    WHERE id_fabricante = F.id AND P.precio >= 220
-) FROM fabricante AS F
-WHERE (
-    SELECT count(*) AS count 
-    FROM producto AS P
-    WHERE id_fabricante = F.id AND P.precio > 
-)
 
-/* Devuelve un listado con los nombres de los fabricantes y el número de productos que
+
+SELECT F.nombre, COUNT(*) AS NumeroProductos
+FROM fabricante AS F
+INNER JOIN producto AS P ON F.id = P.id_fabricante
+WHERE P.precio >= 220
+GROUP BY F.nombre ORDER BY NumeroProductos DESC;
+
+
+/* 3. Devuelve un listado con los nombres de los fabricantes y el número de productos que
 tiene cada uno con un precio superior o igual a 220 €. El listado debe mostrar el nombre
 de todos los fabricantes, es decir, si hay algún fabricante que no tiene productos con un
 precio superior o igual a 220€ deberá aparecer en el listado con un valor igual a 0 en el
 número de productos. */
+SELECT * FROM fabricante;
+SELECT * FROM producto;
 
-SELECT DISTINCT fabricante.nombre,
-    (SELECT COUNT(fabricante)
-    FROM fabricantes_220
-    WHERE fabricante = fabricante.nombre) AS count_fabr
-FROM fabricante
-LEFT JOIN fabricantes_220 ON fabricante.id = fabricantes_220.id_view
-ORDER BY count_fabr DESC; -- ???
+
+SELECT F.nombre AS NombreFabricante, COUNT(*) AS NumeroProductos
+FROM fabricante AS F
+LEFT JOIN producto AS P ON F.id = P.id_fabricante
+GROUP BY F.nombre;
+
+SELECT F.nombre, COUNT(*) AS NumeroProductos
+FROM fabricante AS F
+INNER JOIN producto AS P ON F.id = P.id_fabricante
+WHERE P.precio >= 220
+GROUP BY F.nombre ORDER BY NumeroProductos DESC;
+
 
 /* 5. */
 SELECT F.id, F.nombre, P.nombre, P.precio AS MayorPrecio

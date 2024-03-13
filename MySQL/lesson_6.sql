@@ -519,7 +519,7 @@ producto más caro del fabricante Lenovo.*/
 22. Lista todos los productos del fabricante Asus que tienen un precio superior al precio medio
 de todos sus productos.
 */
-
+USE tienda;
     SELECT *
     FROM producto
     WHERE precio >= (SELECT AVG(C1.precio) AS MayPr
@@ -532,7 +532,3 @@ de todos sus productos.
             WHERE nombre = "Asus"
             )) AS C1);
         
-    SELECT P.*
-    FROM producto AS P
-    JOIN fabricante AS F ON P.id_fabricante = F.id
-    WHERE F.nombre = "Asus";
