@@ -131,3 +131,33 @@ WHERE NOT EXISTS (
 /* 8. Devuelve los nombres de los fabricantes que tienen productos asociados.
 (Utilizando ALL o ANY). */
 
+-- https://www.w3schools.com/sql/sql_any_all.asp
+-- ALL / ANY se usan para hacer una comparacion en este caso, el id del fabricante es igual a CUALQUIER valor de la subconsulta, en los casos donde sea cierto es TRUE;
+
+SELECT F.nombre
+FROM fabricante AS F
+WHERE F.id = ANY (
+    SELECT id_fabricante
+    FROM producto
+);
+
+/*
+    9.Devuelve los nombres de los fabricantes que no tienen productos asociados.
+    (Utilizando ALL o ANY).*/
+
+SELECT F.nombre
+FROM fabricante AS F
+WHERE F.id <> ALL (
+    SELECT id_fabricante
+    FROM producto
+);
+
+/*
+10. Devuelve los nombres de los fabricantes que tienen productos asociados.
+(Utilizando IN o NOT IN).
+11. Devuelve los nombres de los fabricantes que no tienen productos asociados.
+(Utilizando IN o NOT IN).
+12. Devuelve los nombres de los fabricantes que tienen productos asociados.
+(Utilizando EXISTS o NOT EXISTS).
+13. Devuelve los nombres de los fabricantes que no tienen productos asociados.
+(Utilizando EXISTS o NOT EXISTS).*/
