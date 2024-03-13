@@ -75,26 +75,59 @@ número de productos. */
 SELECT * FROM fabricante;
 SELECT * FROM producto;
 
-
-SELECT F.nombre AS NombreFabricante, COUNT(*) AS NumeroProductos
+SELECT F.nombre AS NombreFabricante, SUM(CASE WHEN P.precio >= 220 THEN 1 ELSE 0 END) AS NumProductos
 FROM fabricante AS F
 LEFT JOIN producto AS P ON F.id = P.id_fabricante
-GROUP BY F.nombre;
+GROUP BY F.nombre
+ORDER BY NumProductos DESC;
 
-SELECT F.nombre, COUNT(*) AS NumeroProductos
+/* 4. Devuelve un listado con los nombres de los fabricantes donde la suma del precio de todos
+sus productos es superior a 1000 €.*/
+SELECT * FROM producto;
+SELECT * FROM fabricante;
+SELECT F.nombre
 FROM fabricante AS F
 INNER JOIN producto AS P ON F.id = P.id_fabricante
-WHERE P.precio >= 220
-GROUP BY F.nombre ORDER BY NumeroProductos DESC;
+GROUP BY F.nombre
+HAVING SUM(P.precio) > 1000;
 
+/* 5. Devuelve un listado con el nombre del producto más caro que tiene cada fabricante. El
+resultado debe tener tres columnas: nombre del producto, precio y nombre del fabricante.
+El resultado tiene que estar ordenado alfabéticamente de menor a mayor por el nombre
+del fabricante. */
+SELECT * FROM producto;
+SELECT * FROM fabricante;
 
-/* 5. */
-SELECT F.id, F.nombre, P.nombre, P.precio AS MayorPrecio
-FROM fabricante AS F
-INNER JOIN producto AS P ON P.id_fabricante = F.id
-WHERE P.precio = (
-    SELECT MAX(P.precio)
-    FROM producto AS P
-    WHERE P.id_fabricante = F.id
-)
-ORDER BY F.nombre;
+SELECT MasCaros.Fabricante, MasCaros.MasCaro, P.nombre
+FROM (SELECT F.nombre AS Fabricante, MAX(P.precio) AS MasCaro
+        FROM fabricante AS F
+        INNER JOIN producto AS P ON F.id = P.id_fabricante
+        GROUP BY F.nombre) AS MasCaros, 
+    producto AS P
+WHERE P.precio = MasCaros.MasCaro;
+
+/* 6. Devuelve el producto más caro que existe en la tabla producto sin hacer uso de MAX, ORDER
+BY ni LIMIT. */
+
+SELECT P.nombre, P.precio
+FROM producto AS P
+WHERE NOT EXISTS (
+    SELECT 1 -- el SELECT 1 se usa con el fin de no consumir recursos devolviendo ningun campo de la consulta, su único proposito es evaluar el where ESTO ES EFICIENTE Y SE USA
+    FROM producto AS P2
+    WHERE P2.precio > P.precio
+);
+
+/* 7. Devuelve el producto más barato que existe en la tabla producto sin hacer uso
+de MIN, ORDER BY ni LIMIT. */
+
+SELECT P.nombre, P.precio
+FROM producto AS P
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM producto AS P2
+    WHERE P2.precio < P.precio
+);
+
+/* 8. Devuelve los nombres de los fabricantes que tienen productos asociados.
+(Utilizando ALL o ANY). */
+
