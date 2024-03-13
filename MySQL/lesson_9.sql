@@ -151,6 +151,10 @@ CREATE TABLE tratamiento(
     descripcion_tratamiento VARCHAR(255)
 );
 
+CREATE TABLE medicamento(
+    id INT PRIMARY KEY,
+    nombre VARCHAR(100)
+);
 CREATE TABLE tratamiento_medicamento(
     id_tratamiento INT,
     id_medicamento INT,
@@ -158,12 +162,6 @@ CREATE TABLE tratamiento_medicamento(
     PRIMARY KEY(id_tratamiento,id_medicamento),
     FOREIGN KEY (id_tratamiento) REFERENCES tratamiento(id),
     FOREIGN KEY (id_medicamento) REFERENCES medicamento(id)
-);
-
-
-CREATE TABLE medicamento(
-    id INT PRIMARY KEY,
-    nombre VARCHAR(100)
 );
 
 CREATE TABLE cita(
@@ -179,3 +177,15 @@ CREATE TABLE cita(
     FOREIGN KEY (id_medicamento) REFERENCES medicamento(id)
 );
 
+-- pacientes 2022 id, nombre,fecha, nombre med, tratamiento
+SELECT 
+    P.id AS ID_Paciente,
+    P.nombre AS Paciente, 
+    C.fecha AS Fecha_Cita, 
+    M.nombre AS Nombre_Medico, 
+    T.descripcion_tratamiento AS Descripcion_Tratamiento
+FROM cita AS C
+INNER JOIN paciente AS P ON C.id_paciente = P.id
+INNER JOIN medico AS M ON C.id_medico = M.id
+INNER JOIN tratamiento AS T ON C.id_tratamiento = T.id
+WHERE C.fecha LIKE "2022%";
