@@ -313,13 +313,55 @@ INNER JOIN cliente AS C ON P.id_cliente = C.id;
 cuya cantidad esté entre 300 € y 1000 €.
 */
 
+SELECT * FROM pedido;
+SELECT * FROM cliente;
+
+SELECT P.id_cliente, C.nombre, C.apellido1
+FROM pedido AS P
+INNER JOIN cliente AS C ON P.id_cliente = C.id
+WHERE 300 <= P.total <= 1000 AND P.fecha LIKE '2017%'
+GROUP BY id_cliente
+ORDER BY C.nombre
+;
 
 
 /*
 6. Devuelve el nombre y los apellidos de todos los comerciales que ha participado en algún
 pedido realizado por María Santana Moreno.
+*/
+
+SELECT * FROM comercial;
+
+SELECT V.nombre AS Nombre, V.apellido1 AS Apellido_1, V.apellido2 AS Apellido_2
+FROM pedido AS P
+INNER JOIN comercial AS V ON P.id_comercial = V.id
+WHERE P.id_cliente IN(
+    SELECT id
+    FROM cliente
+    WHERE nombre = "María" AND apellido1 = "Santana" AND apellido2 = "Moreno"
+)
+GROUP BY V.nombre, V.apellido1, V.apellido2
+;
+
+/*
 7. Devuelve el nombre de todos los clientes que han realizado algún pedido con el
-comercial Daniel Sáez Vega.
+comercial Daniel Sáez Vega.*/
+
+
+
+SELECT CL.nombre AS Nombre, CL.apellido1 AS Apellido_1, CL.apellido2 AS Apellido_2
+FROM pedido AS P
+INNER JOIN cliente AS CL ON P.id_cliente = CL.id
+WHERE P.id_comercial IN(
+    SELECT id
+    FROM comercial
+    WHERE nombre = "Daniel" AND apellido1 = "Sáez" AND apellido2 = "Vega"
+)
+GROUP BY CL.nombre, CL.apellido1, CL.apellido2
+;
+
+
+/*
 
 8. Devuelve un listado con todos los clientes junto con los datos de los pedidos que han
 realizado. Este listado también debe incluir los clientes que no han realizado ningún
