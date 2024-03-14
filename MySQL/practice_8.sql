@@ -154,10 +154,38 @@ WHERE F.id <> ALL (
 
 /*
 10. Devuelve los nombres de los fabricantes que tienen productos asociados.
-(Utilizando IN o NOT IN).
+(Utilizando IN o NOT IN).*/
+
+SELECT F.nombre
+FROM fabricante AS F
+WHERE F.id IN (
+    SELECT id_fabricante
+    FROM producto
+);
+
+/*
 11. Devuelve los nombres de los fabricantes que no tienen productos asociados.
-(Utilizando IN o NOT IN).
+(Utilizando IN o NOT IN).*/
+
+SELECT F.nombre
+FROM fabricante AS F
+WHERE F.id NOT IN (
+    SELECT id_fabricante
+    FROM producto
+);
+
+/*
 12. Devuelve los nombres de los fabricantes que tienen productos asociados.
-(Utilizando EXISTS o NOT EXISTS).
+(Utilizando EXISTS o NOT EXISTS). */
+-- https://www.w3schools.com/mysql/mysql_exists.asp
+
+SELECT F.nombre
+FROM fabricante AS F
+WHERE EXISTS (
+    SELECT id_fabricante
+    FROM producto
+);
+
+/*
 13. Devuelve los nombres de los fabricantes que no tienen productos asociados.
 (Utilizando EXISTS o NOT EXISTS).*/
