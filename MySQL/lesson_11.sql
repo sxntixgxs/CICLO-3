@@ -164,7 +164,7 @@ BEGIN
     FROM country AS C
     INNER JOIN countrylanguage AS CL ON C.code = CL.countrycode
     WHERE CL.language = "Spanish" AND CL.IsOfficial = "T" AND C.name = nombre_pais;
-    SET acumulado = IF(acumulado + currently_population IS NULL,acumulado + 0,acumulado + currently_population);
+    SET acumulado = IF(acumulado + currently_population IS NULL,acumulado,acumulado + currently_population);
 END$$
 DELIMITER ;
 DROP PROCEDURE poblacion_total;
