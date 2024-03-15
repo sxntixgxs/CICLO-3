@@ -366,7 +366,15 @@ GROUP BY CL.nombre, CL.apellido1, CL.apellido2
 8. Devuelve un listado con todos los clientes junto con los datos de los pedidos que han
 realizado. Este listado también debe incluir los clientes que no han realizado ningún
 pedido. El listado debe estar ordenado alfabéticamente por el primer apellido, segundo
-apellido y nombre de los clientes.
+apellido y nombre de los clientes.*/
+
+SELECT * FROM cliente;
+SELECT * FROM pedido;
+SELECT CL.nombre, CL.apellido1, P.*
+FROM pedido AS P, cliente AS CL
+
+
+/*
 9. Devuelve un listado con todos los comerciales junto con los datos de los pedidos que
 han realizado. Este listado también debe incluir los comerciales que no han realizado
 ningún pedido. El listado debe estar ordenado alfabéticamente por el primer apellido,
