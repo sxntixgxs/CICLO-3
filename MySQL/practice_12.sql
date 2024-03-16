@@ -76,11 +76,11 @@ BEGIN
 END//
 DELIMITER;
 DROP PROCEDURE consultar_num_empleados_departamento;
-CALL consultar_num_empleados_departamento(1000);
+CALL consultar_num_empleados_departamento(20);
 
 -- Diseñe y construya un procedimiento igual que el anterior, pero que recupere también las
 -- personas que trabajan en dicho departamento, pasándole como parámetro el nombres
-
+DROP PROCEDURE consultar_empleados_por_nombre_departamento;
 DELIMITER //
 CREATE PROCEDURE consultar_empleados_por_nombre_departamento(IN nom_dep VARCHAR(100))
 BEGIN
@@ -108,8 +108,81 @@ BEGIN
     WHERE D.DNombre = nom_dep;
 END//
 DELIMITER;    
-
+CALL consultar_empleados_por_nombre_departamento("CONTABILIDAD");
 SELECT E.Apellido, E.Salario ,D.DNombre
 FROM Emp AS E
 INNER JOIN Dept AS D ON E.Dept_No = D.Dept_No
 WHERE D.DNombre = "CONTABILIDAD";
+
+CREATE PROCEDURE consultar_por_apellido(IN apell VARCHAR(100))
+    BEGIN
+        SELECT E.Oficio, E.Salario, E.Comision
+        FROM Emp AS E
+        WHERE Apellido = apell;
+    END;
+CALL consultar_por_apellido("GATO")
+;
+
+-- 6
+DELIMITER //
+
+CREATE PROCEDURE consultar_por_apellido2(IN apell VARCHAR(100))
+BEGIN
+    SELECT E.Oficio, E.Salario, E.Comision
+    FROM Emp AS E
+    WHERE (apell IS NULL OR E.Apellido = apell);
+END//
+
+DELIMITER ;
+
+
+DROP PROCEDURE consultar_por_apellido2;
+CALL consultar_por_apellido2('');
+
+-- DBA de la base de datos tienda te da la estructura de la base de datos y algunos
+-- procedimientos almacenados y te pide que agregues excepciones a los procedimientos
+-- almacenados registrando el error en la tabla “errores_log” (debes diseñar una estructura para
+-- esta tabla y crearla ).
+
+USE tienda_2;
+SELECT * FROM Productos;
+SELECT * FROM Clientes;
+SELECT * FROM Ventas;
+DROP TABLE errores_log;
+CREATE TABLE IF NOT EXISTS errores_log(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL,
+    info TEXT NOT NULL,
+    num_error INT NOT NULL
+);
+DROP PROCEDURE registrar_error;
+DELIMITER //
+
+CREATE PROCEDURE registrar_error(
+    IN p_fecha DATE, 
+    IN p_info TEXT, 
+    IN p_num_error INT
+)
+BEGIN
+    INSERT INTO tabla_de_errores (fecha, info, num_error) 
+    VALUES (p_fecha, p_info, p_num_error);
+END //
+
+DELIMITER ;
+
+--1er procedimiento
+DROP PROCEDURE AñadirProducto;
+
+DELIMITER //
+CREATE PROCEDURE AñadirProducto(IN nombre VARCHAR(255), IN precio DECIMAL(10, 2),
+IN stock INT)
+BEGIN
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN 
+            CALL registrar_error(NOW(),MESSAGE_TEXT,MYSQL_ERRNO());
+        END;
+    
+        INSERT INTO Productos(nombre, precio, stock) VALUES (nombre, precio, stock);
+        END //
+DELIMITER ;
+
