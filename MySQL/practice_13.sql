@@ -74,4 +74,4 @@ CALL RealizarVenta(4, 5, 3); -- Venta del Producto 4 al Cliente 5 con cantidad 3
 CALL RealizarVenta(5, 1, 2); -- Venta del Producto 5 al Cliente 1 con cantidad 2
 
 
--- 
+-- falto algo de la clase, de las funciones
