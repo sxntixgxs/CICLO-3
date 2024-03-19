@@ -117,5 +117,14 @@ HAVING PrecioPromedio > 200
 
 
 -- 10. Calcula el número de productos que tienen un precio mayor o igual a 180€.
+SELECT * FROM producto;
+SELECT COUNT(id) AS NumProductosMayor180 FROM producto WHERE precio >= 180;
+
 -- 11. Calcula el número de productos que tiene cada fabricante con un precio mayor o igual a
 -- 180€.
+SELECT * FROM fabricante;
+SELECT F.nombre AS NombreFabricante, COUNT(F.id) AS NumProdxFabMayor180
+FROM fabricante AS F
+INNER JOIN producto AS P ON F.id = P.id_fabricante
+WHERE precio >= 180
+GROUP BY F.id;
