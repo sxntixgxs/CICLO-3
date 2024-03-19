@@ -34,6 +34,8 @@ INSERT INTO producto VALUES(9, 'Portátil Ideapd 320', 444, 2);
 INSERT INTO producto VALUES(10, 'Impresora HP Deskjet 3720', 59.99, 3);
 INSERT INTO producto VALUES(11, 'Impresora HP Laserjet Pro M26nw', 180, 3);
 
+-- LINK https://classroom.google.com/c/NjI0NTU4MjMwMzQw PARTE I:
+
 -- Calcula el número total de productos que hay en la tabla productos.
 
 SELECT COUNT(*) AS NumeroProductos
