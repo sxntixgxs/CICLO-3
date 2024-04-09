@@ -1,6 +1,6 @@
 --Creación de la base de datos Hospital
 --
-DROP SCHEMA hospital;
+DROP SCHEMA IF EXISTS hospital;
 CREATE SCHEMA Hospital;
 USE Hospital;
 CREATE TABLE Dept
@@ -71,7 +71,7 @@ CREATE TABLE Enfermo
 );
 
 -- insercion datos
---***Insertar datos en las tablas de la Base de Datos de ejemplo llamada HOSPITAL***
+--Insertar datos en las tablas de la Base de Datos de ejemplo llamada HOSPITAL***
 --Trataremos de mostrar las tres formas de insertar datos fijos o que no provienen de ninguna otra tabla
 --
 --Insertar datos en la table Dept
